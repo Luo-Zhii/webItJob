@@ -15,6 +15,21 @@ export class User {
     password: string;
 
     @Prop()
+    age: number;
+
+    @Prop()
+    gender: string;
+
+    @Prop()
+    address: string;
+
+    @Prop()
+    createdAt: string;
+
+    @Prop()
+    updatedAt: string;
+
+    @Prop()
     isDeleted: boolean;
 
     @Prop()
