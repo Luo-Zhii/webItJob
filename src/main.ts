@@ -45,6 +45,14 @@ async function bootstrap() {
   app.use(passport.initialize())
   app.use(passport.session())
 
+
+  //config cors 
+  app.enableCors({
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+    preflightContinue: false,
+  });
   await app.listen(port);
 }
 bootstrap();
