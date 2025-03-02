@@ -9,6 +9,7 @@ import MongoStore from 'connect-mongo';
 import ms from 'ms';
 import passport from "passport"
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
@@ -17,6 +18,9 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   const port = configService.get<string>('PORT');
+  // class validate require 
+  app.useGlobalPipes(new ValidationPipe())
+
 
   // config global jwt guards
   const reflector = app.get(Reflector)

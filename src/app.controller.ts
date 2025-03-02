@@ -6,6 +6,7 @@ import { AuthService } from './auth/auth.service';
 import { Public } from './auth/decorator/jwt_public';
 import { UpdateUserDto } from './users/dto/update-user.dto';
 import { CreateUserDto } from './users/dto/create-user.dto';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Controller()
 export class AppController {
@@ -23,16 +24,9 @@ export class AppController {
     return this.authService.login(req.user)
   }
 
-  @Public()
-  // @UseGuards(JwtAuthGuard) 
+  @UseGuards(JwtAuthGuard) 
   @Get('profile')
   getProfile(@Request() req) {
-    return req.user
-  }
-
-  // @UseGuards(JwtAuthGuard)
-  @Get('profile2')
-  getProfile2(@Request() req) {
     return req.user
   }
 }
