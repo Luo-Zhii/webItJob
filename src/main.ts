@@ -28,7 +28,7 @@ async function bootstrap() {
 
   // config global jwt guards
   const reflector = app.get(Reflector)
-  // app.useGlobalGuards(new JwtAuthGuard(reflector))
+  app.useGlobalGuards(new JwtAuthGuard(reflector))
 
   //config view engine
   app.useStaticAssets(join(__dirname, '..', 'src/public'));
