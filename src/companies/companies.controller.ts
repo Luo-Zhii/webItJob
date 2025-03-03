@@ -5,6 +5,7 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 import { User } from '../auth/decorator/pass_user';
 import { IUser } from '../users/user.interface';
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
+import { Public } from '@/auth/decorator/jwt_public';
 
 
 @Controller('companies')
@@ -20,23 +21,32 @@ export class CompaniesController {
     return this.companiesService.create(createCompanyDto, user);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.companiesService.findAll();
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.companiesService.findOne(id);
   }
 
-  @Patch()
-  update(@Body() updateCompanyDto: UpdateCompanyDto) {
-    return this.companiesService.update( updateCompanyDto);
+  @Patch(':id')
+  update(
+        @Param('id') id: string, 
+        @Body() updateCompanyDto: UpdateCompanyDto,
+        @User() user: IUser
+      ) {
+    return this.companiesService.update(id, updateCompanyDto, user);
   }
 
   @Delete(':id')
-  deleteCompany(@Param('id') id: string): any  {
-    return this.companiesService.removeById(id);
+  deleteCompany(
+    @Param('id') id: string,
+    @User() user
+  ): any  {
+    return this.companiesService.removeById(id, user);
   }
 }

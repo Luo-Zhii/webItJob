@@ -18,7 +18,7 @@ export class UniqueValidator implements ValidatorConstraintInterface {
   async validate(value: any, args: ValidationArguments) {
     const filter = {};
     filter[args.property] = value;
-    const count = await this.userModel.count(filter);
+    const count = await this.userModel.count(filter); 
     return !count;
   }
 
