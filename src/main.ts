@@ -10,11 +10,15 @@ import ms from 'ms';
 import passport from "passport"
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
   );
+
+  // config unique
+  useContainer(app.select(AppModule), {fallbackOnErrors: true})
 
   const configService = app.get(ConfigService);
   const port = configService.get<string>('PORT');

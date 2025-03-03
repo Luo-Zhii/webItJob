@@ -1,0 +1,29 @@
+import { Controller, Get, Post,  UseGuards, Request, Body, Param, Patch } from '@nestjs/common';
+
+import { AuthService } from './auth.service';
+
+import { LocalAuthGuard } from './local-auth.guard';
+import { JwtAuthGuard } from './jwt-auth.guard';
+
+import { Public } from './decorator/jwt_public';
+
+@Controller()
+export class AuthController {
+    constructor(
+      private readonly authService: AuthService,
+  ) { }
+
+  //If you want skip jwt guard, use @Public()
+  @Public()
+  @UseGuards(LocalAuthGuard)
+  @Post('auth/login')
+  async login(@Request() req) {
+    return this.authService.login(req.user)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req.user
+  }
+}
