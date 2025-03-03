@@ -6,6 +6,7 @@ import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { IUser } from '@/users/user.interface';
+import aqp from 'api-query-params';
 
 @Injectable()
 export class CompaniesService {
@@ -25,8 +26,39 @@ export class CompaniesService {
     return company;
   }
 
-  async findAll() {
-    return await this.companyModel.find({});
+  async findAll(currentPage: number, limit: number, qs: string) {
+    const { filter, sort, projection, population} = aqp(qs)
+    delete filter.page
+    delete filter.limit 
+    
+    // similar index in sql 
+    let offset = (+currentPage - 1) * (+limit)
+
+    // amount of item you want show in this page
+    let defaultLimit = +limit ? +limit : 10
+
+    const totalItems = (await this.companyModel.find(filter)).length 
+    // calculate total pages
+    const totalPages = Math.ceil(totalItems / defaultLimit)
+
+    const result = await this.companyModel.find(filter)
+    .skip(offset)
+    .limit(defaultLimit)
+    // @ts-ignore
+    .sort(sort)
+    .populate(population)
+    .exec()
+
+
+    return {
+      meta: {
+        current: currentPage, // current page 
+        pageSize: limit, // number of record you retrive from db 
+        pages: totalPages, // all of number page with query condition
+        total: totalItems,// all of item (number record)
+      },
+      result // result query 
+    }
   }
 
   async findOne(id: string) {
