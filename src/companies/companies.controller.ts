@@ -5,21 +5,16 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 import { User } from '../auth/decorator/pass_user';
 import { IUser } from '../users/user.interface';
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
-import { Public } from '@/auth/decorator/jwt_public';
+import { Public } from '../auth/decorator/jwt_public';
+import { ResponseMessage } from '@/auth/decorator/message';
 
 
 @Controller('companies')
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
-  @Post()
-  create(
-    @Body() createCompanyDto: CreateCompanyDto,
-    @User() user: IUser
-  ) {
-    return this.companiesService.create(createCompanyDto, user);
-  }
   @Public()
+  @ResponseMessage('fetched companies data succesfully')
   @Get()
   findAll(
     @Query("page") currentPage: string,
@@ -28,13 +23,20 @@ export class CompaniesController {
   ) {
     return this.companiesService.findAll(+currentPage, +limit, qs);
   }
-
+  
   @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.companiesService.findOne(id);
   }
-
+  @Post()
+  create(
+    @Body() createCompanyDto: CreateCompanyDto,
+    @User() user: IUser
+  ) {
+    return this.companiesService.create(createCompanyDto, user);
+  }
+  
   @Patch(':id')
   update(
         @Param('id') id: string, 

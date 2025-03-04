@@ -49,7 +49,6 @@ export class CompaniesService {
     .populate(population)
     .exec()
 
-
     return {
       meta: {
         current: currentPage, // current page 

@@ -18,22 +18,22 @@ async function bootstrap() {
     AppModule,
   );
 
-  // config Interceptor
-  app.useGlobalInterceptors(new TransformInterceptor())
-
   // config unique
   useContainer(app.select(AppModule), {fallbackOnErrors: true})
-
+  
   const configService = app.get(ConfigService);
   const port = configService.get<string>('PORT');
   // class validate require 
   app.useGlobalPipes(new ValidationPipe())
-
-
+  
+  
   // config global jwt guards
   const reflector = app.get(Reflector)
   app.useGlobalGuards(new JwtAuthGuard(reflector))
-
+  
+  // config Interceptor
+  app.useGlobalInterceptors(new TransformInterceptor(reflector))
+  
   //config view engine
   app.useStaticAssets(join(__dirname, '..', 'src/public'));
   app.setBaseViewsDir(join(__dirname, '..', 'src/views'));
