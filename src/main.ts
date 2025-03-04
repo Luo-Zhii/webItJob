@@ -9,16 +9,24 @@ import MongoStore from 'connect-mongo';
 import ms from 'ms';
 import passport from "passport"
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { TransformInterceptor } from './core/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
-  );
+  ); 
 
-  // config unique
+  // config versioning
+  app.setGlobalPrefix('api')
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: ['1','2']
+  })
+
+
+
   useContainer(app.select(AppModule), {fallbackOnErrors: true})
   
   const configService = app.get(ConfigService);
