@@ -17,7 +17,6 @@ export class CompaniesController {
     @Body() createCompanyDto: CreateCompanyDto,
     @User() user: IUser
   ) {
-    console.log(user)
     return this.companiesService.create(createCompanyDto, user);
   }
 

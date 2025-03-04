@@ -11,11 +11,15 @@ import passport from "passport"
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
+import { TransformInterceptor } from './core/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
   );
+
+  // config Interceptor
+  app.useGlobalInterceptors(new TransformInterceptor())
 
   // config unique
   useContainer(app.select(AppModule), {fallbackOnErrors: true})
