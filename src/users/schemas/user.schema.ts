@@ -49,19 +49,19 @@ export class User {
     @Prop({type: Object})
     createdBy: {
         _id: mongoose.Types.ObjectId, 
-        email: string,
+        name: string,
     } 
 
     @Prop({type: Object})
     updatedBy: {
         _id: mongoose.Types.ObjectId, 
-        email: string,
+        name: string,
     } 
 
     @Prop({type: Object})
     deletedBy: {
         _id: mongoose.Types.ObjectId, 
-        email: string,
+        name: string,
     } 
 }
 

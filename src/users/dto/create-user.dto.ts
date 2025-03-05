@@ -55,7 +55,7 @@ export class RegisterUserDto {
   @IsEmail({}, { message: 'Email must be an email' })
   @IsNotEmpty({ message: 'Email should not empty' })
   @Validate(UniqueValidator, ['email'], {
-          message: 'emailAlreadyExists',
+          message: 'email already exists',
   })
   email: string;
 

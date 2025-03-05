@@ -13,8 +13,6 @@ import { ResponseMessage } from '@/auth/decorator/message';
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
-  @Public()
-  @ResponseMessage('fetched companies data succesfully')
   @Get()
   findAll(
     @Query("page") currentPage: string,
@@ -50,7 +48,7 @@ export class CompaniesController {
   @Delete(':id')
   deleteCompany(
     @Param('id') id: string,
-    @User() user
+    @User() user: IUser
   ): any  {
     return this.companiesService.removeById(id, user);
   }

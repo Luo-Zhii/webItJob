@@ -6,8 +6,10 @@ import { LocalAuthGuard } from './local-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
 import { Public } from './decorator/jwt_public';
+import {  RegisterUserDto } from '../users/dto/create-user.dto';
+import { ResponseMessage } from './decorator/message';
 
-@Controller()
+@Controller('auth')
 export class AuthController {
     constructor(
       private readonly authService: AuthService,
@@ -16,7 +18,7 @@ export class AuthController {
   //If you want skip jwt guard, use @Public()
   @Public()
   @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
+  @Post('login')
   async login(@Request() req) {
     return this.authService.login(req.user)
   }
@@ -26,5 +28,10 @@ export class AuthController {
     return req.user
   }
 
-  
+  @Public()
+  @ResponseMessage('register a new user successfully')
+  @Post('/register')
+  async register( @Body() registerUserDto : RegisterUserDto) {
+    return this.authService.register(registerUserDto)
+  }
 }

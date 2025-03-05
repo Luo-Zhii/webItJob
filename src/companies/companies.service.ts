@@ -20,7 +20,7 @@ export class CompaniesService {
       ...createCompanyDto,
       createdBy: {
         _id: user._id,
-        email: user.email
+        name: user.name
       }
     })
     return company;
@@ -87,7 +87,7 @@ export class CompaniesService {
       {
         deletedBy: {
           _id: user._id,
-          email: user.email
+          email: user.email,
         }
       })
     return this.companyModel.softDelete({
