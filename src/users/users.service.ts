@@ -112,6 +112,7 @@ export class UsersService {
 
     return this.userModel.updateOne( { _id: updateUserDto._id }, { 
       name: updateUserDto.name,
+      email: updateUserDto.email,
       age: updateUserDto.age,
       gender: updateUserDto.gender,
       address: updateUserDto.address,

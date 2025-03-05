@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { IUser } from '@/users/user.interface';
-import { genSaltSync, hashSync } from 'bcryptjs';
-import { RegisterUserDto } from '@/users/dto/create-user.dto';
+import { IUser } from '../users/user.interface';
+import { RegisterUserDto } from '../users/dto/create-user.dto';
+import { ConfigService } from '@nestjs/config';
+import ms from 'ms';
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   async validateUser(email: string, pass: string): Promise<any> {
@@ -31,12 +33,16 @@ export class AuthService {
       email,
       role,
     }
+    let refresh_token = await this.createRefreshToken(payload)
     return {
       access_token: this.jwtService.sign(payload),
-      _id,
-      name,
-      email,
-      role,
+      refresh_token,
+      user: {
+        _id,
+        name,
+        email,
+        role,
+      },
     }
   }
 
@@ -48,4 +54,12 @@ export class AuthService {
       createdAt,
     };
   }
+
+  async createRefreshToken(payload: any) {
+    const refresh_token = await this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('JWT_REFRESH_TOKEN'), 
+      expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRED'), 
+    });
+    return refresh_token;
+}
 }

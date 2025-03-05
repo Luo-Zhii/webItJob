@@ -17,6 +17,7 @@ export class AuthController {
 
   //If you want skip jwt guard, use @Public()
   @Public()
+  @ResponseMessage('User Login')
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req) {
