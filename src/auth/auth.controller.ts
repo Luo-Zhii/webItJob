@@ -8,6 +8,8 @@ import { Public } from './decorator/jwt_public';
 import {  RegisterUserDto } from '../users/dto/create-user.dto';
 import { ResponseMessage } from './decorator/message';
 import { Response } from 'express';
+import { IUser } from '@/users/user.interface';
+import { User } from './decorator/pass_user';
 
 @Controller('auth')
 export class AuthController {
@@ -24,9 +26,10 @@ export class AuthController {
     return this.authService.login(req.user, response);
   }
 
+  @ResponseMessage("Get user infomation")
   @Get('profile')
-  getProfile(@Req() req) {
-    return req.user
+  getProfile(@User() user: IUser) {
+    return { user }
   }
 
   @Public()
