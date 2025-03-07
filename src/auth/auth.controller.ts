@@ -7,7 +7,7 @@ import { LocalAuthGuard } from './local-auth.guard';
 import { Public } from './decorator/jwt_public';
 import {  RegisterUserDto } from '../users/dto/create-user.dto';
 import { ResponseMessage } from './decorator/message';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { IUser } from '@/users/user.interface';
 import { User } from './decorator/pass_user';
 
@@ -37,5 +37,13 @@ export class AuthController {
   @Post('/register')
   async register( @Body() registerUserDto : RegisterUserDto) {
     return this.authService.register(registerUserDto)
+  }
+
+
+  @Public()
+  @Get('/refresh')
+  async getRefresh(@Req() req: Request, @Res({ passthrough: true }) response){
+    const refreshToken = req.cookies['refreshToken']
+    return this.authService.processRefreshToken(refreshToken, response)
   }
 }

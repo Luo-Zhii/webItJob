@@ -1,4 +1,4 @@
-import { Injectable} from '@nestjs/common';
+import { BadRequestException, Injectable} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { IUser } from '../users/user.interface';
@@ -27,7 +27,7 @@ export class AuthService {
   }
 
   async login(user: IUser, response: Response): Promise<any> {
-    const { _id, name, email, role } = user;
+    const { _id, name, email, role, address } = user;
     const payload = { 
       sub: 'token login',
       iss: 'from server',
@@ -35,13 +35,18 @@ export class AuthService {
       name,
       email,
       role,
+      address,
     };
-    let refresh_token = await this.createRefreshToken(payload);
 
-    await this.usersService.updateRefreshToken(_id, refresh_token);
+    let refreshToken = await this.createRefreshToken(payload);
+    
+
+    await this.usersService.updateRefreshToken(_id, refreshToken);
+
+    response.clearCookie('refreshToken')
 
     // Set cookie
-    response.cookie('refresh_token', refresh_token, {
+    response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       maxAge: ms(this.configService.get<string>('JWT_REFRESH_EXPIRED')),
     });
@@ -57,7 +62,7 @@ export class AuthService {
     };
   }
 
-  async register(registerUserDto: RegisterUserDto) { 
+  async register(registerUserDto: RegisterUserDto) {
     let newUser = await this.usersService.register(registerUserDto);
     const {_id, createdAt} = newUser;
     return {
@@ -67,10 +72,56 @@ export class AuthService {
   }
 
   async createRefreshToken(payload: any) {
-    const refresh_token = await this.jwtService.sign(payload, {
+    const refreshToken = await this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_REFRESH_TOKEN'), 
       expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRED'), 
     });
-    return refresh_token;
+    return refreshToken;
+  }
+
+  async processRefreshToken(refreshToken: string, response: Response) {
+    try {
+      this.jwtService.verify(refreshToken, {
+        secret: this.configService.get<string>('JWT_REFRESH_TOKEN')
+      });
+      let user = await this.usersService.findUserByRefreshToken(refreshToken);
+      if (!user) {
+        throw new BadRequestException('Invalid refresh token');
+      }
+      const { _id, name, email, role, address } = user;
+      const payload = { 
+      sub: 'token login',
+      iss: 'from server',
+      _id,
+      name,
+      email,
+      role,
+      address,
+    };
+
+    let refresh_token = await this.createRefreshToken(payload);
+    
+    await this.usersService.updateRefreshToken(_id.toString(), refresh_token);
+
+    response.clearCookie('refreshToken')
+
+    // Set cookie
+    response.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      maxAge: ms(this.configService.get<string>('JWT_REFRESH_EXPIRED')),
+    });
+
+    return {
+      access_token: this.jwtService.sign(payload),
+      user: {
+        _id,
+        name,
+        email,
+        role,
+      },
+    };
+    } catch (error) {
+      throw new BadRequestException('Invalid refresh token');
+    }
   }
 }
