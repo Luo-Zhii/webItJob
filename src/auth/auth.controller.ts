@@ -21,13 +21,13 @@ export class AuthController {
   @Public()
   @ResponseMessage('User Login')
   @UseGuards(LocalAuthGuard)
-  @Post('login')
+  @Post('/login')
   async login(@Res({ passthrough: true }) response, @Req() req){
     return this.authService.login(req.user, response);
   }
 
   @ResponseMessage("Get user infomation")
-  @Get('profile')
+  @Get('/profile')
   getProfile(@User() user: IUser) {
     return { user }
   }
@@ -52,6 +52,6 @@ export class AuthController {
   async logout( @Res({ passthrough: true }) response,@User() user: IUser){
 
     return this.authService.logout( response, user)
-  }
+  } dada
 
 }

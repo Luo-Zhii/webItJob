@@ -6,7 +6,7 @@ import { Public } from '../auth/decorator/jwt_public';
 import { ResponseMessage } from '../auth/decorator/message';
 import { User } from '../auth/decorator/pass_user';
 
-@Controller('user')
+@Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
@@ -14,8 +14,8 @@ export class UsersController {
   @ResponseMessage('fetched user data succesfully')
   @Get()
   findAll(
-    @Query("page") currentPage: string,
-    @Query("limit") limit: string,
+    @Query("current") currentPage: string,
+    @Query("pageSize") limit: string,
     @Query() qs: string,
   ) {
     return this.usersService.findAll(+currentPage, +limit, qs);

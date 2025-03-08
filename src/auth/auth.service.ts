@@ -15,8 +15,8 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOneByEmail(email);
+  async validateUser(username: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOneByEmail(username);
     if (user) {
       const isValid = this.usersService.isValidPassword((pass), (user.password));
         if (isValid) {
