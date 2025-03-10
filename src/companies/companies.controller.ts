@@ -13,6 +13,7 @@ import { ResponseMessage } from '@/auth/decorator/message';
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
+  @Public()
   @Get()
   findAll(
     @Query("current") currentPage: string,

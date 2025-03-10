@@ -9,7 +9,10 @@ class Company {
   _id: mongoose.Schema.Types.ObjectId
 
   @IsNotEmpty()
-  name:string
+  name: string
+
+  @IsNotEmpty()
+  logo: string
 }
 
 
@@ -39,6 +42,9 @@ export class CreateJobDto {
 
     @IsNotEmpty({ message: 'Description should not empty' })
     description: string;
+
+    @IsNotEmpty({ message: 'isActive should not empty' })
+    isActive: boolean
 
 
     @IsNotEmpty({ message: 'startDate should not empty' })

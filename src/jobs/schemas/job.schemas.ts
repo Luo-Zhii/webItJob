@@ -16,7 +16,8 @@ export class Job {
     @Prop({type: Object})
     company: {
         _id : string, 
-        name: string
+        name: string,
+        logo: string,
     }
 
     @Prop()
