@@ -10,22 +10,20 @@ import { ResponseMessage } from '@/auth/decorator/message';
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
-  @ResponseMessage('File uploaded successfully!')
   @Public()
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
+  @ResponseMessage('Upload Single Files!')
+  @UseInterceptors(FileInterceptor('upload'))
   uploadFile(
     @UploadedFile(
       new ParseFilePipeBuilder()
-        .addFileTypeValidator({ fileType: 'image/jpeg|image/png|image/gif|image/bmp|image/webp|text/plain' })  
+        .addFileTypeValidator({ fileType: 'image/jpeg|image/png|image/gif|image/bmp|image/webp|text/plain|application/pdf' })  
         .addMaxSizeValidator({ maxSize: 1024 * 1024 })      
         .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY }),
     ) file: Express.Multer.File,
   ) {
-    console.log(file);
-    return {  file };
+    return {  fileName: file.filename };
   }
-
   
   @Get()
   findAll() {
