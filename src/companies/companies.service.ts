@@ -71,7 +71,7 @@ export class CompaniesService {
   async update(id: string, updateCompanyDto: UpdateCompanyDto, user: IUser) {
     return await this.companyModel.updateOne(
       { _id: id },
-      {
+      { 
         ...updateCompanyDto,
         updatedBy: {
           _id: user._id,

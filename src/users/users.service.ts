@@ -18,17 +18,23 @@ export class UsersService {
     private configService: ConfigService,
   ) {}
 
-  async hashPassword(password: string): Promise<string> {
-    const salt = await bcrypt.genSalt(10);
-    return bcrypt.hash(password, salt);
+  hashPassword = (password: string) => {
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
+    return hash
   }
 
   async create(createUserDto: CreateUserDto, user: IUser) {
-    const hashPassword = await this.hashPassword(createUserDto.password);
+    const hashPassword =  this.hashPassword(createUserDto.password);
 
-    const newUser = await this.userModel.create({
-      ...createUserDto,
+    let newUser = await this.userModel.create({
+      email: createUserDto.email,
       password: hashPassword,
+      age: createUserDto.age,
+      gender: createUserDto.gender,
+      address: createUserDto.address,
+      company: createUserDto.company,
+      role: "USER",
       createdBy: {
         _id: user._id,
         name: user.name
@@ -37,11 +43,14 @@ export class UsersService {
 
     return newUser
   }
+  isValidPassword(plainPassword: string, hashedPassword: string){
+    const isValid = bcrypt.compareSync(plainPassword, hashedPassword);
+    return isValid;
+  } 
 
   async register(registerModule: RegisterUserDto) {
     const { name, email, password, age, gender, address } = registerModule;
-    const hashPassword = await this.hashPassword(password);
-
+    const hashPassword = this.hashPassword(password);
     const newRegister = await this.userModel.create({
       name,
       email,
@@ -55,15 +64,11 @@ export class UsersService {
     return newRegister;
   }
 
-  async findOneByEmail(email: string) {
-    const user = await this.userModel.findOne({ email });
+  async findOneByEmail(username: string) {
+    const user = await this.userModel.findOne({ email: username });
     return user;
   }
 
-  async isValidPassword(plainPassword: string, hashedPassword: string): Promise<boolean> {
-    const isMatch = await bcrypt.compareSync(plainPassword, hashedPassword);
-    return isMatch;
-  }
 
   async findAll(currentPage: number, limit: number, qs: string) {
     const { filter, sort, projection, population} = aqp(qs)

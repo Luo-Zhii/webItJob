@@ -12,6 +12,7 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { TransformInterceptor } from './core/transform.interceptor';
 import cookieParser from 'cookie-parser';
+import * as express from "express";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
@@ -45,6 +46,7 @@ async function bootstrap() {
   //config view engine
   app.useStaticAssets(join(__dirname, '..', 'src/public'));
   app.setBaseViewsDir(join(__dirname, '..', 'src/views'));
+  app.use("/images", express.static(join(process.cwd(), "public/images")));
   app.setViewEngine('ejs');
 
   //config cookies
@@ -73,6 +75,7 @@ async function bootstrap() {
     credentials: true,
     preflightContinue: false,
   });
+
   await app.listen(port);
 }
 bootstrap();

@@ -27,7 +27,7 @@ export class AuthController {
   }
 
   @ResponseMessage("Get user infomation")
-  @Get('/profile')
+  @Get('/account')
   getProfile(@User() user: IUser) {
     return { user }
   }
