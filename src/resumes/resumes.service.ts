@@ -6,11 +6,15 @@ import { Resume, ResumeDocument } from './schemas/resume.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import aqp from 'api-query-params';
 import mongoose from 'mongoose';
+import { UsersService } from '@/users/users.service';
+import { ConfigService } from '@nestjs/config';
 
 export class ResumesService {
   constructor(
     @InjectModel(Resume.name)
-    private resumeModel: SoftDeleteModel<ResumeDocument>
+    private resumeModel: SoftDeleteModel<ResumeDocument>,
+    private usersService: UsersService,
+    private configService: ConfigService
   ) {}
 
   async create(createUserCvDto: CreateUserCvDto, user: IUser) {
@@ -88,9 +92,21 @@ export class ResumesService {
 
   async findByUser(user: IUser)
   {
-    return this.resumeModel.findOne({
+    return await this.resumeModel.findOne({
       userId: user._id
-    });
+    })
+      .sort("-createdAt")
+      .populate([
+        {
+          path: "companyId",
+          select: {name: 1}
+        },
+        {
+          path: "jobId",
+          select: {name: 1}
+        }
+      ])
+    ;
   }
 
   async update(id: string, status: string, user: IUser) {
@@ -117,7 +133,14 @@ export class ResumesService {
   }
 
   async removeById(id: string, user: IUser) {
-    if (!mongoose.Types.ObjectId.isValid(id)) return 'not found company';
+    if (!mongoose.Types.ObjectId.isValid(id)) return 'not found jobs';
+    
+    const foundUser = await this.usersService.findOne(id);
+    if (foundUser === 'not found user' || foundUser.email === this.configService.get<string>('ADMIN_EMAIL')) {
+      throw new Error('Invalid user');
+    }
+
+
     await this.resumeModel.updateOne(
       { _id: id },
       {

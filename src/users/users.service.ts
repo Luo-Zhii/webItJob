@@ -65,7 +65,8 @@ export class UsersService {
   }
 
   async findOneByEmail(username: string) {
-    const user = await this.userModel.findOne({ email: username });
+    const user = await this.userModel.findOne({ email: username })
+    .populate({path: "role", select: {name: 1, permissions: 1}})
     return user;
   }
 
@@ -109,7 +110,10 @@ export class UsersService {
 
     return this.userModel.findOne({
       _id: id,
-    }).select('-password');
+    })
+    .select('-password')
+    .populate({path: "role", select: {name: 1, _id: 1}})
+    ;
   } 
 
   async update(updateUserDto: UpdateUserDto, user: IUser) {
