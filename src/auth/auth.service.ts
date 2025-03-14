@@ -40,7 +40,7 @@ export class AuthService {
     };
 
     let refreshToken = await this.createRefreshToken(payload);
-    
+
 
     await this.usersService.updateRefreshToken(_id, refreshToken);
 

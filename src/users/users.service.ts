@@ -16,7 +16,7 @@ export class UsersService {
     @InjectModel(User.name)
     private userModel: SoftDeleteModel<UserDocument>,
     private configService: ConfigService,
-  ) {}
+  ) { }
 
   hashPassword = (password: string) => {
     const salt = bcrypt.genSaltSync(10);
@@ -25,7 +25,7 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto, user: IUser) {
-    const hashPassword =  this.hashPassword(createUserDto.password);
+    const hashPassword = this.hashPassword(createUserDto.password);
 
     let newUser = await this.userModel.create({
       email: createUserDto.email,
@@ -43,10 +43,10 @@ export class UsersService {
 
     return newUser
   }
-  isValidPassword(plainPassword: string, hashedPassword: string){
+  isValidPassword(plainPassword: string, hashedPassword: string) {
     const isValid = bcrypt.compareSync(plainPassword, hashedPassword);
     return isValid;
-  } 
+  }
 
   async register(registerModule: RegisterUserDto) {
     const { name, email, password, age, gender, address } = registerModule;
@@ -66,33 +66,33 @@ export class UsersService {
 
   async findOneByEmail(username: string) {
     const user = await this.userModel.findOne({ email: username })
-    .populate({path: "role", select: {name: 1, permissions: 1}})
+      .populate({ path: "role", select: { name: 1, permissions: 1 } })
     return user;
   }
 
 
   async findAll(currentPage: number, limit: number, qs: string) {
-    const { filter, sort, projection, population} = aqp(qs)
+    const { filter, sort, projection, population } = aqp(qs)
     delete filter.current
-    delete filter.pageSize 
-    
+    delete filter.pageSize
+
     // similar index in sql 
     let offset = (+currentPage - 1) * (+limit)
 
     // amount of item you want show in this page
     let defaultLimit = +limit ? +limit : 10
 
-    const totalItems = (await this.userModel.find(filter)).length 
+    const totalItems = (await this.userModel.find(filter)).length
     // calculate total pages
     const totalPages = Math.ceil(totalItems / defaultLimit)
 
     const result = await this.userModel.find(filter)
-    .skip(offset)
-    .limit(defaultLimit)
-    // @ts-ignore
-    .sort(sort)
-    .populate(population)
-    .exec()
+      .skip(offset)
+      .limit(defaultLimit)
+      // @ts-ignore
+      .sort(sort)
+      .populate(population)
+      .exec()
 
     return {
       meta: {
@@ -111,15 +111,15 @@ export class UsersService {
     return this.userModel.findOne({
       _id: id,
     })
-    .select('-password')
-    .populate({path: "role", select: {name: 1, _id: 1}})
-    ;
-  } 
+      .select('-password')
+      .populate({ path: "role", select: { name: 1, _id: 1 } })
+      ;
+  }
 
   async update(updateUserDto: UpdateUserDto, user: IUser) {
 
 
-    return this.userModel.updateOne( { _id: updateUserDto._id }, { 
+    return this.userModel.updateOne({ _id: updateUserDto._id }, {
       name: updateUserDto.name,
       email: updateUserDto.email,
       age: updateUserDto.age,
@@ -129,32 +129,34 @@ export class UsersService {
         _id: user._id,
         name: user.name,
       },
-     } )
+    })
   }
 
   async removeById(id: string, user: IUser) {
     await this.userModel.updateOne(
       { _id: id },
-      {deletedBy: {
-        _id: user._id,
-        name: user.name,
-      }}
+      {
+        deletedBy: {
+          _id: user._id,
+          name: user.name,
+        }
+      }
     )
-    
+
     // soft delete
     if (!mongoose.Types.ObjectId.isValid(id)) return 'not found user';
 
     return this.userModel.softDelete({
       _id: id,
     },
-  );
+    );
   }
 
   async updateRefreshToken(_id: string, refreshToken: string) {
     return await this.userModel.updateOne(
-      { _id},
-      {refreshToken},
-  )
+      { _id },
+      { refreshToken },
+    )
   }
 
   async findUserByRefreshToken(refreshToken: string) {

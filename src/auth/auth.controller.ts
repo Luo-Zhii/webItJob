@@ -52,6 +52,8 @@ export class AuthController {
   async logout( @Res({ passthrough: true }) response,@User() user: IUser){
 
     return this.authService.logout( response, user)
-  } dada
+  }
 
 }
+
+
