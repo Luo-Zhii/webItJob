@@ -16,8 +16,8 @@ export class RolesController {
     @Public()
     @Get()
     findAll(
-      @Query() current: string, 
-      @Query() pageSize: string,
+      @Query('current') current: string, 
+      @Query('pageSize') pageSize: string,
       @Query() qs: string,
     ) {
       return this.rolesService.findAll(+current, +pageSize, qs);

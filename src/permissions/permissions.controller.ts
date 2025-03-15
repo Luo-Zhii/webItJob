@@ -17,8 +17,8 @@ export class PermissionsController {
   @Public()
   @Get()
   findAll(
-    @Query() current: string, 
-    @Query() pageSize: string,
+    @Query("current") current: string, 
+    @Query("pageSize") pageSize: string,
     @Query() qs: string,
   ) {
     return this.permissionsService.findAll(+current, +pageSize, qs);

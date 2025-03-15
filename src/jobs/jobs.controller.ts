@@ -17,8 +17,8 @@ export class JobsController {
   @Public()
   @Get()
   findAll(
-    @Query() current: string, 
-    @Query() pageSize: string,
+    @Query("current") current: string, 
+    @Query("pageSize") pageSize: string,
     @Query() qs: string,
   ) {
     return this.jobsService.findAll(+current, +pageSize, qs);
