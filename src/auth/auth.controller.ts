@@ -10,11 +10,13 @@ import { ResponseMessage } from './decorator/message';
 import { Response, Request } from 'express';
 import { IUser } from '@/users/user.interface';
 import { User } from './decorator/pass_user';
+import { RolesService } from '@/roles/roles.service';
 
 @Controller('auth')
 export class AuthController {
     constructor(
       private readonly authService: AuthService,
+      private readonly rolesService: RolesService
   ) { }
 
   //If you want skip jwt guard, use @Public()
@@ -28,7 +30,9 @@ export class AuthController {
 
   @ResponseMessage("Get user infomation")
   @Get('/account')
-  getProfile(@User() user: IUser) {
+  async handleGetAccount(@User() user: IUser) {
+    const temp = await this.rolesService.findOne(user.role._id) as any
+    user.permissions = temp.permissions;
     return { user }
   }
 

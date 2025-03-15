@@ -16,5 +16,5 @@ export class IUser {
         name: string,
         apiPath: string,
         module: string,
-    }[ ]
+    }[]
 }

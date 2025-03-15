@@ -6,6 +6,7 @@ import { RegisterUserDto } from '../users/dto/create-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import ms from 'ms';
+import { RolesService } from '@/roles/roles.service';
 
 @Injectable()
 export class AuthService {
@@ -13,22 +14,28 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private rolesService: RolesService
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOneByEmail(username);
     if (user) {
       const isValid =  await this.usersService.isValidPassword(pass, user.password);
-      console.log(isValid)
-        if (isValid) {
-            return user;
+      if (isValid) {
+            const userRole = user.role as unknown as { _id: string, name: string }
+            const temp = await this.rolesService.findOne(userRole._id)
+            const objRole = {
+              ...user.toObject(),
+              permissions: temp?.permissions ?? []
+            }
+            return objRole;
         }
     }
     return null;
   }
 
   async login(user: IUser, response: Response): Promise<any> {
-    const { _id, name, email, role, address } = user;
+    const { _id, name, email, role, address, permissions } = user;
     const payload = { 
       sub: 'token login',
       iss: 'from server',
@@ -59,6 +66,7 @@ export class AuthService {
         name,
         email,
         role,
+        permissions,
       },
     };
   }

@@ -8,6 +8,8 @@ import mongoose from 'mongoose';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { ConfigService } from '@nestjs/config';
+import { ADMIN_ROLE } from '@/databases/const';
+
 
 @Injectable()
 export class RolesService {
@@ -98,7 +100,7 @@ export class RolesService {
   async remove(id: string, user: IUser) {
     const foundUser = await this.roleModel.findOne({ _id: id });
 
-    if (foundUser.name === this.configService.get<string>('ADMIN_ROLE')) {
+    if (foundUser.name === ADMIN_ROLE) {
       throw new Error('Invalid user');
     }
     if (!mongoose.Types.ObjectId.isValid(id)) return 'not found jobs';
