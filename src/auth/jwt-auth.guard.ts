@@ -33,7 +33,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
           targetMethod === permission.method && targetEndpoint === permission.apiPath
         )
 
-        if (targetEndpoint.startsWith("/api/v1/auth")) isExist === true
+        if (targetEndpoint.startsWith("/api/v1/auth")){
+          isExist = true
+        } 
         if (!isExist) {
           throw new ForbiddenException(
             `User does not have permission to access ${targetMethod} ${targetEndpoint}`
