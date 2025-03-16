@@ -33,13 +33,14 @@ export class UsersService {
     const hashPassword = this.hashPassword(createUserDto.password);
 
     let newUser = await this.userModel.create({
+      name: createUserDto.name,
       email: createUserDto.email,
       password: hashPassword,
       age: createUserDto.age,
       gender: createUserDto.gender,
       address: createUserDto.address,
       company: createUserDto.company,
-      role: "USER",
+      role: createUserDto.role,
       createdBy: {
         _id: user._id,
         name: user.name
@@ -152,6 +153,12 @@ export class UsersService {
     // soft delete
     if (!mongoose.Types.ObjectId.isValid(id)) return 'not found user';
 
+    const foundUser = await this.userModel.findById(id)
+    if (foundUser && foundUser.email === this.configService.get<string>('ADMIN-ROLE'))
+    {
+      throw new Error('Admin role cannot be deleted')
+    }
+    
     return this.userModel.softDelete({
       _id: id,
     },
