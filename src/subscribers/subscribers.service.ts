@@ -69,16 +69,20 @@ export class SubscribersService {
       return this.subscriberModel.find();
     }
 
-  async update(id: string, updateSubscriberDto: UpdateSubscriberDto, user: IUser) {
+  async update( updateSubscriberDto: UpdateSubscriberDto, user: IUser) {
     return await this.subscriberModel.updateOne(
-      { _id: id },
+      { email: user.email},
       { 
         ...updateSubscriberDto,
         updatedBy: {
           _id: user._id,
           email: user.email
         }
-      })
+      },
+      {
+        upsert: true 
+      }
+    )
   }
 
   async removeById(id: string, user: IUser) {
@@ -94,8 +98,11 @@ export class SubscribersService {
     return this.subscriberModel.softDelete({
       _id: id,
     },
-  
   );
-  }
+}
+async getSkills(user: IUser) {
+  const { email } = user
+  return await this.subscriberModel.findOne({email}, {skills: 1 })
+}
 }
 

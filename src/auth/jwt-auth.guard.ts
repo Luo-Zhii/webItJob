@@ -3,6 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { IS_PUBLIC_KEY } from './decorator/jwt_public';
 import { Request } from 'express';
+import { IS_PUBLIC_PERMISSION } from './decorator/permissions_public';
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
     constructor(private reflector: Reflector) {
@@ -13,6 +14,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
           context.getHandler(),
           context.getClass(),
         ]);
+
+        
         if (isPublic) {
           return true;
         }
@@ -20,7 +23,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       }
       handleRequest(err, user, info, context: ExecutionContext) {
         const request: Request = context.switchToHttp().getRequest()
-        // You can throw an exception based on either "info" or "err" arguments
+
+        const isSkipPermission = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_PERMISSION, [
+          context.getHandler(),
+          context.getClass(),
+        ]);
+
         if (err || !user) {
           throw err || new UnauthorizedException('Token not valid');
         }
@@ -35,7 +43,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         if (targetEndpoint && targetEndpoint.startsWith("/api/v1/auth")){
           isExist = true
         } 
-        if (!isExist) {
+        if (!isExist && !isSkipPermission) {
           throw new ForbiddenException(
             `User does not have permission to access ${targetMethod} ${targetEndpoint}`
           )
