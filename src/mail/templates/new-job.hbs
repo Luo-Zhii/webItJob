@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cơ Hội Việc Làm Mới Nhất</title>
+</head>
+
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px;">
+
+    <table role="presentation" width="100%"
+        style="background-color: #ffffff; max-width: 600px; margin: auto; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+        <tr>
+            <td align="center">
+                <h2 style="color: #007bff;">🚀 Cơ Hội Việc Làm Hấp Dẫn</h2>
+                <p>Chào {{name}}, dưới đây là những công việc phù hợp với bạn:</p>
+            </td>
+        </tr>
+
+        {{#each jobs}}
+        <tr>
+            <td style="border-bottom: 1px solid #ddd; padding: 15px 0;">
+                <h3 style="margin: 0; color: #333;">{{this.title}}</h3>
+                <p style="margin: 5px 0; color: #555;"><strong>{{this.company}}</strong> - {{this.location}}</p>
+                <p style="margin: 5px 0; color: #777;">💰 Lương: {{this.salary}}</p>
+                <div>
+                    {{#each skills}}
+                    <span
+                        style="display: inline-block; background-color: #e3f2fd; color: #007bff; font-size: 14px; font-weight: bold; padding: 5px 10px; border-radius: 20px; margin: 4px; ">
+                        {{this}}
+                    </span>
+                    {{/each}}
+                </div>
+                <a href="{{this.apply_link}}"
+                    style="background-color: #007bff; color: #ffffff; text-decoration: none; padding: 8px 12px; border-radius: 5px; display: inline-block; margin-top: 10px;">Ứng
+                    tuyển ngay</a>
+            </td>
+        </tr>
+        {{/each}}
+
+        <tr>
+            <td align="center" style="padding-top: 20px; font-size: 12px; color: #888;">
+                <p>&copy; 2025 JobFinder. Tất cả các quyền được bảo lưu.</p>
+            </td>
+        </tr>
+    </table>
+
+</body>
+
+</html>

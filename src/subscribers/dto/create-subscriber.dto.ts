@@ -9,6 +9,5 @@ export class CreateSubscriberDto {
     
       @IsNotEmpty({ message: 'Skills should not empty' })
       @IsArray({ message: 'Skills should be array'})
-      @IsString({ message: 'Skills should be string'})
       skills: string;
 }

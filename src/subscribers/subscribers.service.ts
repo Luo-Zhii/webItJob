@@ -60,13 +60,14 @@ export class SubscribersService {
     }
   }
 
-  async findOne(id: string) {
-    if (!mongoose.Types.ObjectId.isValid(id)) return 'not found subscriber';
+    async findOne(id: string) {
+      if (!mongoose.Types.ObjectId.isValid(id)) return 'not found subscriber';
 
-    return this.subscriberModel.findOne({
-      _id: id
-    });
-  }
+      return this.subscriberModel.findById(id);
+    }
+    async find() {
+      return this.subscriberModel.find();
+    }
 
   async update(id: string, updateSubscriberDto: UpdateSubscriberDto, user: IUser) {
     return await this.subscriberModel.updateOne(

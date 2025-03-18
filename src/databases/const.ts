@@ -504,6 +504,90 @@ export const INIT_PERMISSION = [
         createdAt: new Date("2025-03-14T06:02:00.000Z"),
         updatedAt: new Date("2025-03-14T06:02:00.000Z"),
     },
+    {
+        "_id": "67d5a87e8fa81a2ebe6ab592",
+        "name": "Get subscriber by id",
+        "apiPath": "/api/v1/subscribers/:id",
+        "method": "GET",
+        "module": "SUBSCRIBERS",
+        "isDeleted": false,
+        "createdBy": {
+            "_id": "67d44e7c5b6437feb44d92d8",
+            "name": "ADMIN"
+        },
+        "deletedAt": null,
+        "createdAt": "2025-03-14T17:46:38.968Z",
+        "updatedAt": "2025-03-14T17:50:03.623Z",
+        "__v": 0,
+        "updatedBy": {
+            "_id": "67d44e7c5b6437feb44d92d8",
+            "name": "ADMIN"
+        }
+    },
+    {
+        "_id": "67d5abd18fa81a2ebe6ab5a0",
+        "name": "Create new subscriber",
+        "apiPath": "/api/v1/subscribers",
+        "method": "POST",
+        "module": "SUBSCRIBERS",
+        "isDeleted": false,
+        "createdBy": {
+            "_id": "67d44e7c5b6437feb44d92d8",
+            "name": "ADMIN"
+        },
+        "deletedAt": null,
+        "createdAt": "2025-03-14T18:00:49.876Z",
+        "updatedAt": "2025-03-14T18:00:49.876Z",
+        "__v": 0
+    },
+    {
+        "_id": "67d5c5666799d07534b2fc58",
+        "name": "Update subscriber by id",
+        "apiPath": "/api/v1/subscribers/:id",
+        "method": "PATCH",
+        "module": "SUBSCRIBERS",
+        "isDeleted": false,
+        "createdBy": {
+            "_id": "67d44e7c5b6437feb44d92d8",
+            "name": "ADMIN"
+        },
+        "deletedAt": null,
+        "createdAt": "2025-03-14T19:24:54.329Z",
+        "updatedAt": "2025-03-14T19:24:54.329Z",
+        "__v": 0
+    },
+    {
+        "_id": "67d5e3391fa06f6da1124f41",
+        "name": "Delete subscriber by id",
+        "apiPath": "/api/v1/subscribers/:id",
+        "method": "DELETE",
+        "module": "SUBSCRIBERS",
+        "isDeleted": false,
+        "createdBy": {
+            "_id": "67d44e7c5b6437feb44d92d8",
+            "name": "ADMIN"
+        },
+        "deletedAt": null,
+        "createdAt": "2025-03-14T20:48:41.121Z",
+        "updatedAt": "2025-03-14T20:48:41.121Z",
+        "__v": 0
+    },
+    {
+        "_id": "67d5e4f81fa06f6da1124f55",
+        "name": "Get subscribers with pagination",
+        "apiPath": "/api/v1/subscribers",
+        "method": "GET",
+        "module": "SUBSCRIBERS",
+        "isDeleted": false,
+        "createdBy": {
+            "_id": "67d44e7c5b6437feb44d92d8",
+            "name": "ADMIN"
+        },
+        "deletedAt": null,
+        "createdAt": "2025-03-14T20:56:08.081Z",
+        "updatedAt": "2025-03-14T20:56:08.081Z",
+        "__v": 0
+    }
 ];
 
 
